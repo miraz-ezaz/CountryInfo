@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -65,7 +66,8 @@ class CountrySearchAPIView(APIView):
         return Response(serializer.data)
 
 
-class CountryListView(View):
+class CountryListView(LoginRequiredMixin,View):
+    login_url = 'login'
     def get(self, request):
         q = request.GET.get('q', '')
         countries = Country.objects.all()
@@ -74,7 +76,8 @@ class CountryListView(View):
         return render(request, 'countries/country_list.html', {'countries': countries})
 
 
-class CountryDetailView(View):
+class CountryDetailView(LoginRequiredMixin,View):
+    login_url = 'login'
     def get(self, request, pk):
         country = get_object_or_404(Country, pk=pk)
 
