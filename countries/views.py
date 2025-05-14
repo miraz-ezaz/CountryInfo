@@ -23,3 +23,10 @@ class CountryUpdateAPIView(generics.UpdateAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
     lookup_field = 'id'
+
+
+class CountryDeleteAPIView(generics.DestroyAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+    lookup_field = 'id'
+
