@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}{{ country.name_common }}{% endblock %}
+
+{% block content %}
+<h2>{{ country.name_common }} ({{ country.cca2 }})</h2>
+<p><strong>Official Name:</strong> {{ country.name_official }}</p>
+<p><strong>Region:</strong> {{ country.region.name }}</p>
+<p><strong>Population:</strong> {{ country.population|intcomma }}</p>
+<p><strong>Languages:</strong>
+  {% for lang in country.languages.all %}
+    {{ lang.name }}{% if not forloop.last %}, {% endif %}
+  {% endfor %}
+</p>
+
+<h4>Other Countries in {{ country.region.name }}</h4>
+<ul>
+  {% for other in same_region %}
+    <li>{{ other.name_common }}</li>
+  {% empty %}
+    <li>No other countries found in this region.</li>
+  {% endfor %}
+</ul>
+
+<h4>Other Countries Speaking Same Languages</h4>
+<ul>
+  {% for lang, countries in same_language.items %}
+    <li><strong>{{ lang }}:</strong>
+      {% for c in countries %}{{ c.name_common }}{% if not forloop.last %}, {% endif %}{% endfor %}
+    </li>
+  {% empty %}
+    <li>No language matches found.</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'country-web-list' %}" class="btn btn-secondary mt-3">Back to list</a>
+{% endblock %}

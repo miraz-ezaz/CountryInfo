@@ -1,8 +1,10 @@
+from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from django.db.models import Q
+from django.views import View
 
 from countries.models import Country, Language, Region
 from countries.serializers import CountrySerializer
@@ -61,3 +63,33 @@ class CountrySearchAPIView(APIView):
         )
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)
+
+
+class CountryListView(View):
+    def get(self, request):
+        q = request.GET.get('q', '')
+        countries = Country.objects.all()
+        if q:
+            countries = countries.filter(name_common__icontains=q)
+        return render(request, 'countries/country_list.html', {'countries': countries})
+
+
+class CountryDetailView(View):
+    def get(self, request, pk):
+        country = get_object_or_404(Country, pk=pk)
+
+        # Other countries in the same region
+        same_region = Country.objects.filter(region=country.region).exclude(pk=pk)
+
+        # Countries speaking same languages
+        same_language = {}
+        for lang in country.languages.all():
+            others = Country.objects.filter(languages=lang).exclude(pk=pk)
+            if others.exists():
+                same_language[lang.name] = others
+
+        return render(request, 'countries/country_detail.html', {
+            'country': country,
+            'same_region': same_region,
+            'same_language': same_language
+        })
