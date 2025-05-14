@@ -8,5 +8,6 @@ urlpatterns = [
     path('countries/create/', views.CountryCreateAPIView.as_view(), name='country-create'),
     path('countries/<int:id>/update/', views.CountryUpdateAPIView.as_view(), name='country-update'),
     path('countries/<int:id>/delete/', views.CountryDeleteAPIView.as_view(), name='country-delete'),
+    path('countries/region/<str:region_name>/', views.SameRegionCountriesAPIView.as_view(), name='countries-by-region'),
 
 ]
