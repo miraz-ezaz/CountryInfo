@@ -1,29 +1,21 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 from django.db.models import Q
 
 from countries.models import Country, Language, Region
 from countries.serializers import CountrySerializer
 
 
-class CountryListAPIView(generics.ListAPIView):
+# List & Create
+class CountryListCreateAPIView(generics.ListCreateAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
 
-class CountryDetailAPIView(generics.RetrieveAPIView):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-    lookup_field = 'id'
-
-
-class CountryCreateAPIView(generics.CreateAPIView):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-
-
-class CountryUpdateAPIView(generics.UpdateAPIView):
+# Retrieve, Update & Delete
+class CountryRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
     lookup_field = 'id'
@@ -38,5 +30,17 @@ class CountryDeleteAPIView(generics.DestroyAPIView):
 class SameRegionCountriesAPIView(APIView):
     def get(self, request, region_name):
         countries = Country.objects.filter(region__name__iexact=region_name)
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data)
+
+
+class SameRegionByCountryAPIView(APIView):
+    def get(self, request, id):
+        country = get_object_or_404(Country, id=id)
+        region = country.region
+        if not region:
+            return Response({"message": "This country has no region data."}, status=404)
+
+        countries = Country.objects.filter(region=region).exclude(id=country.id)
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)

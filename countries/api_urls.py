@@ -3,11 +3,10 @@ from countries import views
 
 
 urlpatterns = [
-    path('countries/', views.CountryListAPIView.as_view(), name='country-list'),
-    path('countries/<int:id>/', views.CountryDetailAPIView.as_view(), name='country-detail'),
-    path('countries/create/', views.CountryCreateAPIView.as_view(), name='country-create'),
-    path('countries/<int:id>/update/', views.CountryUpdateAPIView.as_view(), name='country-update'),
-    path('countries/<int:id>/delete/', views.CountryDeleteAPIView.as_view(), name='country-delete'),
+    path('countries/', views.CountryListCreateAPIView.as_view(), name='country-list-create'),
+    path('countries/<int:id>/', views.CountryRetrieveUpdateDeleteAPIView.as_view(), name='country-rud'),
+
     path('countries/region/<str:region_name>/', views.SameRegionCountriesAPIView.as_view(), name='countries-by-region'),
+    path('countries/<int:id>/same-region/', views.SameRegionByCountryAPIView.as_view(), name='same-region-by-country'),
 
 ]
