@@ -8,5 +8,6 @@ urlpatterns = [
 
     path('countries/region/<str:region_name>/', views.SameRegionCountriesAPIView.as_view(), name='countries-by-region'),
     path('countries/<int:id>/same-region/', views.SameRegionByCountryAPIView.as_view(), name='same-region-by-country'),
+    path('countries/language/<str:lang_code>/', views.CountriesByLanguageAPIView.as_view(), name='countries-by-language'),
 
 ]

@@ -44,3 +44,10 @@ class SameRegionByCountryAPIView(APIView):
         countries = Country.objects.filter(region=region).exclude(id=country.id)
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)
+
+
+class CountriesByLanguageAPIView(APIView):
+    def get(self, request, lang_code):
+        countries = Country.objects.filter(languages__code__iexact=lang_code)
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data)
