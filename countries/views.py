@@ -51,3 +51,13 @@ class CountriesByLanguageAPIView(APIView):
         countries = Country.objects.filter(languages__code__iexact=lang_code)
         serializer = CountrySerializer(countries, many=True)
         return Response(serializer.data)
+
+
+class CountrySearchAPIView(APIView):
+    def get(self, request):
+        query = request.query_params.get('q', '')
+        countries = Country.objects.filter(
+            Q(name_common__icontains=query) | Q(name_official__icontains=query)
+        )
+        serializer = CountrySerializer(countries, many=True)
+        return Response(serializer.data)
