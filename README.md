@@ -6,7 +6,7 @@ Repository: [https://github.com/miraz-ezaz/CountryInfo](https://github.com/miraz
 
 ---
 
-## Setup Instructions
+## 🛠️ Setup Instructions
 
 ### 1. Clone the Repository
 
@@ -45,6 +45,35 @@ Install all necessary dependencies:
 pip install -r requirements.txt
 ```
 
+---
 
+### 4. Apply Migrations
 
+After setting up models, run the following commands to initialize the database:
 
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
+### 5. Populate the Database with Country Data
+
+Run the custom management command to fetch and store data from the REST Countries API:
+
+```bash
+python manage.py fetch_countries
+```
+
+You’ll see logs for each country as it’s being added.
+
+---
+
+## Database
+
+This project uses Django’s **default SQLite3 database**, as it’s sufficient for assignment/demo purposes and doesn’t require additional configuration.
+
+The database file will be created automatically as `db.sqlite3` in the project root after running migrations.
+
+---
